@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'photo',
     ];
 
     /**
@@ -44,5 +46,45 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    // Relasi ke Comment
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    // Relasi ke Like (post yang di-like)
+    public function likes()
+    {
+        return $this->belongsToMany(Post::class, 'likes')->withTimestamps();
+    }
+
+    // Relasi ke Favorite (post yang difavoritkan)
+    public function favorites()
+    {
+        return $this->belongsToMany(Post::class, 'favorites')->withTimestamps();
+    }
+
+    // Relasi ke Notification
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+    // Helper methods untuk cek role
+    public function isAdmin()
+    {
+        return $this->hasRole('admin');
+    }
+
+    public function isAuthor()
+    {
+        return $this->hasRole('author');
     }
 }
